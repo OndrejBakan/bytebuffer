@@ -34,7 +34,11 @@ class ByteBuffer
 
     public function read(int $length = 1): string|false
     {
-        return fread($this->stream, $length);
+        $result = fread($this->stream, $length);
+        if ($result === false) {
+            throw new \RuntimeException("Failed to read from stream");
+        }
+        return $result;
     }
 
     public function readUint16(): int|null
