@@ -37,17 +37,17 @@ class ByteBuffer
         return fread($this->stream, $length);
     }
 
-    public function readUint16(): int
+    public function readUint16(): int|false
     {
         return $this->unpackData('v', 'n', $this->read(2));
     }
 
-    public function readUint32(): int
+    public function readUint32(): int|false
     {
         return $this->unpackData('V', 'N', $this->read(4));
     }
 
-    public function readUint64(): int
+    public function readUint64(): int|false
     {
         return $this->unpackData('P', 'J', $this->read(8));
     }
@@ -62,7 +62,7 @@ class ByteBuffer
         fseek($this->stream, $offset, SEEK_CUR);
     }
 
-    private function unpackData($littleEndianFormat, $bigEndianFormat, $data)
+    private function unpackData($littleEndianFormat, $bigEndianFormat, $data): int|null
     {
         return unpack($this->endianness === self::LITTLE_ENDIAN ? $littleEndianFormat : $bigEndianFormat, $data)[1];
     }
