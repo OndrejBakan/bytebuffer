@@ -37,17 +37,17 @@ class ByteBuffer
         return fread($this->stream, $length);
     }
 
-    public function readUint16(): int|false
+    public function readUint16(): int|null
     {
         return $this->unpackData('v', 'n', $this->read(2));
     }
 
-    public function readUint32(): int|false
+    public function readUint32(): int|null
     {
         return $this->unpackData('V', 'N', $this->read(4));
     }
 
-    public function readUint64(): int|false
+    public function readUint64(): int|null
     {
         return $this->unpackData('P', 'J', $this->read(8));
     }
