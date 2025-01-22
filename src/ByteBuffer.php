@@ -66,7 +66,7 @@ class ByteBuffer
         fseek($this->stream, $offset, SEEK_CUR);
     }
 
-    private function unpackData($littleEndianFormat, $bigEndianFormat, $data): int|null
+    private function unpackData(string $littleEndianFormat, string $bigEndianFormat, $data): int|null
     {
         return unpack($this->endianness === self::LITTLE_ENDIAN ? $littleEndianFormat : $bigEndianFormat, $data)[1];
     }
