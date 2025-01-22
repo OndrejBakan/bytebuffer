@@ -22,6 +22,11 @@ class ByteBuffer
         rewind($this->stream);
     }
 
+    public function limit(): int
+    {
+        return fstat($this->stream)['size'];
+    }
+
     public function position(): int|false
     {
         return ftell($this->stream);
