@@ -43,17 +43,23 @@ class ByteBuffer
 
     public function readUint16(): int|null
     {
-        return $this->unpackData('v', 'n', $this->read(2));
+        return $this->unpackData('v', 'n', $this->read(2))[1];
     }
 
     public function readUint32(): int|null
     {
-        return $this->unpackData('V', 'N', $this->read(4));
+        return $this->unpackData('V', 'N', $this->read(4))[1];
     }
 
-    public function readUint64(): int|null
+    public function readUint64(): string|null
     {
-        return $this->unpackData('P', 'J', $this->read(8));
+        $data = $this->unpackData('Vlow/Vhigh', 'Nlow/Nhigh', $this->read(8));
+
+        $high = gmp_init($data['high']);
+        $low = gmp_init($data['low']);
+
+        $result = gmp_strval(gmp_add(gmp_mul($high, gmp_init("4294967296")), $low));
+        return $result;
     }
 
     public function seek(int $offset, int $whence = SEEK_SET)
@@ -66,9 +72,9 @@ class ByteBuffer
         fseek($this->stream, $offset, SEEK_CUR);
     }
 
-    private function unpackData(string $littleEndianFormat, string $bigEndianFormat, $data): int|null
+    private function unpackData(string $littleEndianFormat, string $bigEndianFormat, $data): array|false
     {
-        return unpack($this->endianness === self::LITTLE_ENDIAN ? $littleEndianFormat : $bigEndianFormat, $data)[1];
+        return unpack($this->endianness === self::LITTLE_ENDIAN ? $littleEndianFormat : $bigEndianFormat, $data);
     }
 
 }
